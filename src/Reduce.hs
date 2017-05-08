@@ -10,6 +10,14 @@ reduce (App (Abs var t1) t2)
 reduce t
   = t
 
+reducible :: Term -> Bool
+reducible (App (Abs v t1) t2)
+  = True
+reducible (App t1 t2)
+  = reducible t1 || reducible t2
+reducible t
+  = False
+
 replace :: Term -> String -> Term -> Term
 replace (Var v1) v2 t
   | v1 == v2  = t
