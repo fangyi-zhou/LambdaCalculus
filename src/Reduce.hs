@@ -15,6 +15,8 @@ reducible (App (Abs v t1) t2)
   = True
 reducible (App t1 t2)
   = reducible t1 || reducible t2
+reducible (Abs v t)
+  = reducible t
 reducible t
   = False
 
