@@ -23,7 +23,7 @@ reduceOne (App (Abs v t1) t2)
   | otherwise    = replace t1 v t2
 reduceOne (App t1 t2)
   | reducible t1 = App (reduceOne t1) t2
-  | reducible t2 = App t2 (reduceOne t2)
+  | reducible t2 = App t1 (reduceOne t2)
 reduceOne (Abs v t)
   | reducible t = Abs v (reduceOne t)
 
