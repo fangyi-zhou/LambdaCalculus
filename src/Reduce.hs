@@ -3,12 +3,9 @@ import Term
 import Data.List ((\\), union)
 
 reduce :: Term -> Term
-reduce (Abs var term)
-  = Abs var (reduce term)
-reduce (App (Abs var t1) t2)
-  = reduce (replace t1 var t2)
 reduce t
-  = t
+  | reducible t = reduce $ reduceOne t
+  | otherwise   = t
 
 reducible :: Term -> Bool
 reducible (App (Abs v t1) t2)
@@ -19,6 +16,16 @@ reducible (Abs v t)
   = reducible t
 reducible t
   = False
+
+reduceOne :: Term -> Term
+reduceOne (App (Abs v t1) t2)
+  | reducible t2 = App (Abs v t1) (reduceOne t2)
+  | otherwise    = replace t1 v t2
+reduceOne (App t1 t2)
+  | reducible t1 = App (reduceOne t1) t2
+  | reducible t2 = App t2 (reduceOne t2)
+reduceOne (Abs v t)
+  | reducible t = Abs v (reduceOne t)
 
 replace :: Term -> String -> Term -> Term
 replace (Var v1) v2 t
